@@ -54,3 +54,12 @@ dkms.conf
 # vscode
 .vscode/
 *.code-workspace
+
+# environment
+.env
+
+# compile commands
+compile_commands.json
+
+# binary
+bin/
