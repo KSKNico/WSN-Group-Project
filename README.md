@@ -1,5 +1,5 @@
 # WSN-Group-Project
-This repo is contains code for a group project for the Wireless Sensor Networks (WSN) lecture of 2024 at TU Dresden.
+This repo contains code for a group project for the Wireless Sensor Networks (WSN) lecture of 2024 at TU Dresden.
 
 ## Description
 The purpose of this project is to monitor structural health using the NRF52840 sensing platforms and the RIOT OS. Three sensor nodes will be deployed on a bridge in a linear topology. A fourth node will be deployed on the ground. This node serves as a root or a server node. The three sensor nodes regularly sample the motion of the structure using 3D accelerometers and 3D gyroscopes. Data from these sensors are transmitted to the root node at 10 packets per second rate. A higher rate is desirable if it is sustainable throughout the experiments. The receiver always measures the RSSI value of a received packet and associates it with the parameters in the payload. A single experiment lasts from 20 to 30 minutes without interruption and should produce data with the following formats: timestamp, RSSI, Ax, Ay, Az, Gx, Gy, Gz, Packet Number. The packet number is required to trace the number of lost packets between any successful transmissions. The experiments on a single civil structure (bridge) should be repeated 10 times, in order to collect appreciable statistics.
