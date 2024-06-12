@@ -11,9 +11,32 @@ BOARD ?= feather-nrf52840-sense
 # the enviroment variable RIOTBASE is defined in the .env file in the parent directory!
 RIOTBASE ?= ${RIOTBASE}
 
+# enable default networking devides in the platform
+USEMODULE += netdev_default
+
+# automatically initialize network interfaces for enabled devices
+USEMODULE += auto_init_gnrc_netif
+
+# enable single interface optimization.
+# remove this if more than one interface is present
+USEMODULE += gnrc_netif_single
+
+# add minimal IPv6 support
+USEMODULE += gnrc_ipv6_default
+
+# enable ping support
+USEMODULE += gnrc_icmpv6_echo
+
+# add module to hex dump data
+USEMODULE += od
+
 # add also the shell, some shell commands
 USEMODULE += shell
 USEMODULE += shell_cmds_default
+
+# Enable the milliseconds timer.
+USEMODULE += ztimer
+USEMODULE += ztimer_msec
 
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
