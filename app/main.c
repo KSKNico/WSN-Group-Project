@@ -7,6 +7,9 @@
 #include "receiver.h"
 #include "measurements.h"
 
+char sender_stack[THREAD_STACKSIZE_MAIN];
+char receiver_stack[THREAD_STACKSIZE_MAIN];
+
 void print_package(void) {
 }
 
@@ -15,6 +18,9 @@ int send_cmd(int argc, char **argv) {
         printf("Usage: send <destination>\n");
         return 1;
     }
+
+    thread_create(sender_stack, sizeof(sender_stack), THREAD_PRIORITY_MAIN - 1,
+                   THREAD_CREATE_STACKTEST, sender_loop, argv[1], "sender");
     (void) argv;
     return 0;
 }
