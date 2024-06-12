@@ -1,8 +1,6 @@
 #include "sender.h"
 
 int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement) {
-
-
     gnrc_pktsnip_t *payload, *ip;
     ipv6_hdr_t *ip_hdr;
     size_t payload_size = sizeof(measurement_t);
@@ -50,39 +48,27 @@ int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement) 
 }
 
 void* sender_loop(void *arg) {
+    puts("Starting sender loop.");
+
+    saul_reg_t *accel, *gyro;
+    if (!find_saul(&accel, &gyro)) {
+        return NULL;
+    }
+
     ipv6_addr_t addr;
     netif_t *netif;
     if (netutils_get_ipv6(&addr, &netif, (char *) arg) < 0) {
         puts("Unable to parse IPv6 address\n");
         return NULL;
     }
-    measurement_t current_measurement;
-    while (1) {
-        get_measurement(&current_measurement);
-        send_packet(&addr, &netif, &current_measurement);
 
-
-
-void *retrieve_values(void) {
-    saul_reg_t *accel = saul_reg_find_type(SAUL_SENSE_ACCEL);
-    if(!accel) {
-        puts("Error retrieving accelerometer sensor.");
-        return NULL;
-    }
-    
-    saul_reg_t *gyro = saul_reg_find_type(SAUL_SENSE_GYRO);
-    if(!gyro) {
-        puts("Error retrieving gyroscope sensor.");
-        return NULL;
-    }
-    
-    measurement result;
     int pkt_number = 0;
-
-    while(1) {
+    measurement_t result;
+    while (1) {
         record_all_values(accel, gyro, &result);
-        pkt_number = pkt_number + 1;
         printf("Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
             result.Ax, result.Ay, result.Az, result.Gx, result.Gy, result.Gz);
+        send_packet(&addr, &netif, &result);
+        pkt_number = pkt_number + 1;
     }
 }

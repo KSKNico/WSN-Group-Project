@@ -15,7 +15,7 @@ int record_value(saul_reg_t* sensor, phydat_t *results) {
     return 0;
 }
 
-int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measurement *values) {
+int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measurement_t *values) {
     phydat_t accel;
     int res = record_value(accel_sensor, &accel);
     if(res != 0) {
@@ -28,7 +28,23 @@ int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measure
         puts("Error reading a value from the gyroscope.");
         return 1;
     }
-    *values = (measurement){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2]};
+    *values = (measurement_t){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2]};
     return 0;
+}
+
+bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
+    *accel = saul_reg_find_type(SAUL_SENSE_ACCEL);
+    if(!*accel) {
+        puts("Error retrieving accelerometer sensor.");
+        return false;
+    }
+    
+    *gyro = saul_reg_find_type(SAUL_SENSE_GYRO);
+    if(!*gyro) {
+        puts("Error retrieving gyroscope sensor.");
+        return false;
+    }
+
+    return true;
 }
 

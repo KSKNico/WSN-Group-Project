@@ -10,7 +10,8 @@
 
 #include "measurements.h"
 
+/* Should be run in a separate thread */
 void* sender_loop(void *arg);
 
+/* Sends a packet with the given measurement to the given address */
 int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement);
-void *retrieve_values(void);

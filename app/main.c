@@ -10,9 +10,6 @@
 char sender_stack[THREAD_STACKSIZE_MAIN];
 char receiver_stack[THREAD_STACKSIZE_MAIN];
 
-void print_package(void) {
-}
-
 int send_cmd(int argc, char **argv) {
     if (argc != 2) {
         printf("Usage: send <destination>\n");
