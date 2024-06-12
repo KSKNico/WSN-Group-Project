@@ -13,3 +13,4 @@
 void* sender_loop(void *arg);
 
 int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement);
+void *retrieve_values(void);
