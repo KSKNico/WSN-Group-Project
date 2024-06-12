@@ -11,6 +11,12 @@ BOARD ?= feather-nrf52840-sense
 # the enviroment variable RIOTBASE is defined in the .env file in the parent directory!
 RIOTBASE ?= ${RIOTBASE}
 
+# include SAUL to interact with onboard sensors and actuators
+USEMODULE += saul
+
+# include and auto-initialize all available sensors
+USEMODULE += saul_default
+
 # enable default networking devides in the platform
 USEMODULE += netdev_default
 
