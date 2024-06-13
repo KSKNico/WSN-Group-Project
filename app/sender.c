@@ -66,8 +66,6 @@ void* sender_loop(void *arg) {
     measurement_t result;
     while (1) {
         record_all_values(accel, gyro, &result);
-        printf("Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
-            result.Ax, result.Ay, result.Az, result.Gx, result.Gy, result.Gz);
         send_packet(&addr, &netif, &result);
         pkt_number = pkt_number + 1;
     }

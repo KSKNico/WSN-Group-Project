@@ -1,5 +1,13 @@
 #pragma once
 
-#include "thread.h"
+#include "net/gnrc/netapi.h"
+#include "net/gnrc/netif.h"
+#include "net/ipv6/addr.h"
+#include "net/gnrc.h"
+#include "net/gnrc/ipv6/hdr.h"
+#include "net/utils.h"
+#include "net/netif.h"
 
-void receive_loop(void);
+#include "measurements.h"
+
+void* receiver_loop(void* arg);

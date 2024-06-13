@@ -48,3 +48,8 @@ bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
     return true;
 }
 
+void print_measurment(measurement_t const *measurement) {
+        printf("Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        measurement->Ax, measurement->Ay, measurement->Az, 
+        measurement->Gx, measurement->Gy, measurement->Gz);
+}

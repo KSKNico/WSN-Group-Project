@@ -13,9 +13,8 @@ typedef struct {
 // TODO: extract the RSSI value from the packet
 void get_rssi_from_pkt(gnrc_pktsnip_t const *pkt);
 
-// TODO: extract the measurement from the packet
-void get_measurement_from_pkt(gnrc_pktsnip_t const *pkt, measurement_t *measurement);
-
 int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measurement_t *values);
 
 bool find_saul(saul_reg_t **accel, saul_reg_t **gyro);
+
+void print_measurment(measurement_t const *measurement);

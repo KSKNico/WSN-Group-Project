@@ -28,6 +28,9 @@ int receive_cmd(int argc, char **argv) {
         return 1;
     }
 
+    thread_create(receiver_stack, sizeof(receiver_stack), THREAD_PRIORITY_MAIN - 1,
+                   THREAD_CREATE_STACKTEST, receiver_loop, NULL, "receiver");
+
     (void) argv;
     return 0;
 
