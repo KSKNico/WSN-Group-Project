@@ -12,7 +12,8 @@ void receive_pkt(measurement_t *measurement, int16_t *rssi) {
         gnrc_pktsnip_t *pkt = msg.content.ptr;
 
         memcpy(measurement, pkt->data, pkt->size);
-        *rssi = pkt->data->rssi;
+        gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)pkt->data;
+        *rssi = netif_hdr->rssi;
         gnrc_pktbuf_release(pkt);
     }
 } 
