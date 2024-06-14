@@ -4,7 +4,7 @@
 
 #define MSG_QUEUE_SIZE  8
 
-void receive_pkt(measurement_t *measurement) {
+void receive_pkt(measurement_t *measurement, int16_t *rssi) {
     msg_t msg;
 
     msg_receive(&msg);
@@ -12,7 +12,8 @@ void receive_pkt(measurement_t *measurement) {
         gnrc_pktsnip_t *pkt = msg.content.ptr;
 
         memcpy(measurement, pkt->data, pkt->size);
-
+        gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)pkt->data;
+        *rssi = netif_hdr->rssi;
         gnrc_pktbuf_release(pkt);
     }
 } 
@@ -28,9 +29,10 @@ void* receiver_loop(void* arg) {
     gnrc_netreg_register(GNRC_NETTYPE_IPV6, &server);   
 
     measurement_t measurement;   
+    int16_t rssi;
     while(1) {
-        receive_pkt(&measurement);
-        print_measurment(&measurement);
+        receive_pkt(&measurement, &rssi);
+        print_measurment(&measurement, &rssi);
     }
 
     gnrc_netreg_unregister(GNRC_NETTYPE_IPV6, &server);
