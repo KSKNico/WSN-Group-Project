@@ -52,4 +52,13 @@ DEVELHELP ?= 1
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
 
+# with ROLE=sender, the sender application is compiled
+# with ROLE=receiver, the receiver application is compiled
+# if nothing is specified, the shell is run
+ifeq ($(ROLE), sender)
+CFLAGS += -DSENDER
+else ifeq ($(ROLE), receiver)
+CFLAGS += -DRECEIVER
+endif
+
 include $(RIOTBASE)/Makefile.include

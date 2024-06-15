@@ -10,6 +10,8 @@
 char sender_stack[THREAD_STACKSIZE_MAIN];
 char receiver_stack[THREAD_STACKSIZE_MAIN];
 
+char const *IP_STRING = "fe80::1";
+
 int send_cmd(int argc, char **argv) {
     if (argc != 2) {
         printf("Usage: send <destination>\n");
@@ -40,11 +42,17 @@ SHELL_COMMAND(send, "Starts the measurement and send loop.", send_cmd);
 SHELL_COMMAND(receive, "Receives all incoming packages and prints them.", receive_cmd);
 int main(void)
 {
-    /* buffer to read commands */
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
+    #ifdef SENDER
+        send_cmd(2, (char *[]){"send", IP_STRING});
+    #elif defined(RECEIVER)
+        receive_cmd(1, (char *[]){"receive"});
+    #else
+        /* buffer to read commands */
+        char line_buf[SHELL_DEFAULT_BUFSIZE];
 
-    /* run the shell, this will block the thread waiting for incoming commands */
-    shell_run(NULL, line_buf, SHELL_DEFAULT_BUFSIZE);
+        /* run the shell, this will block the thread waiting for incoming commands */
+        shell_run(NULL, line_buf, SHELL_DEFAULT_BUFSIZE);
+    #endif
 
     return 0;
 }
