@@ -1,5 +1,7 @@
 #include "sender.h"
 
+int const DELAY_MS = 100;
+
 int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement) {
     gnrc_pktsnip_t *payload, *ip;
     ipv6_hdr_t *ip_hdr;
@@ -68,5 +70,6 @@ void* sender_loop(void *arg) {
         record_all_values(accel, gyro, &result);
         send_packet(&addr, &netif, &result);
         pkt_number = pkt_number + 1;
+        xtimer_usleep(DELAY_MS * US_PER_MS);
     }
 }
