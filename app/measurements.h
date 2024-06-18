@@ -9,12 +9,8 @@
 // what is with the precision of the values? Is int16_t enough? Can we do better?
 typedef struct {
     int16_t Ax, Ay, Az, Gx, Gy, Gz;
-} measurement_t;
-
-typedef struct {
-    measurement_t measurement;
     int pkt_number;
-} message_t;
+} measurement_t;
 
 // TODO: extract the RSSI value from the packet
 void get_rssi_from_pkt(gnrc_pktsnip_t const *pkt);

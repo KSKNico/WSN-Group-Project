@@ -28,7 +28,8 @@ int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measure
         puts("Error reading a value from the gyroscope.");
         return 1;
     }
-    *values = (measurement_t){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2]};
+    // pkt_number is set to 0 here, it should be set later - outside the function!
+    *values = (measurement_t){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2], 0};
     return 0;
 }
 
@@ -52,8 +53,9 @@ void print_measurment(measurement_t const *measurement, int16_t const *rssi, ipv
         // convert ip addr to string
         char ip_addr_str[IPV6_ADDR_MAX_STR_LEN];
         ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);
-        printf("IP: %s, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        printf("IP: %s, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
         ip_addr_str,
+        measurement->pkt_number,
         *rssi,
         measurement->Ax, measurement->Ay, measurement->Az, 
         measurement->Gx, measurement->Gy, measurement->Gz);

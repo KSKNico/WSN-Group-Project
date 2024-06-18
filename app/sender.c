@@ -68,6 +68,7 @@ void* sender_loop(void *arg) {
     measurement_t result;
     while (1) {
         record_all_values(accel, gyro, &result);
+        result.pkt_number = pkt_number;
         send_packet(&addr, &netif, &result);
         pkt_number = pkt_number + 1;
         xtimer_usleep(DELAY_MS * US_PER_MS);
