@@ -48,8 +48,13 @@ bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
     return true;
 }
 
-void print_measurment(measurement_t const *measurement, int16_t const *rssi) {
-        printf("RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n", *rssi,
+void print_measurment(measurement_t const *measurement, int16_t const *rssi, ipv6_addr_t const *addr) {
+        // convert ip addr to string
+        char ip_addr_str[IPV6_ADDR_MAX_STR_LEN];
+        ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);
+        printf("IP: %s, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        ip_addr_str,
+        *rssi,
         measurement->Ax, measurement->Ay, measurement->Az, 
         measurement->Gx, measurement->Gy, measurement->Gz);
 }
