@@ -49,12 +49,14 @@ bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
     return true;
 }
 
-void print_measurment(measurement_t const *measurement, int16_t const *rssi, ipv6_addr_t const *addr) {
+void print_measurment(measurement_t const *measurement, int16_t const *rssi, 
+ipv6_addr_t const *addr, uint64_t const *timestamp) {
         // convert ip addr to string
         char ip_addr_str[IPV6_ADDR_MAX_STR_LEN];
         ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);
-        printf("IP: %s, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        printf("IP: %s, timestamp: %d, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
         ip_addr_str,
+        *timestamp,
         measurement->pkt_number,
         *rssi,
         measurement->Ax, measurement->Ay, measurement->Az, 

@@ -20,4 +20,4 @@ int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measure
 bool find_saul(saul_reg_t **accel, saul_reg_t **gyro);
 
 void print_measurment(measurement_t const *measurement, int16_t const *rssi, 
-ipv6_addr_t const *addr);
+ipv6_addr_t const *addr, uint64_t const *timestamp);
