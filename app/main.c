@@ -10,7 +10,9 @@
 char sender_stack[THREAD_STACKSIZE_MAIN];
 char receiver_stack[THREAD_STACKSIZE_MAIN];
 
-char const *IP_STRING = "fe80::1";
+
+// this is the IP address of the receiver
+char const *IP_STRING = IP_ADDR;
 
 int send_cmd(int argc, char **argv) {
     if (argc != 2) {

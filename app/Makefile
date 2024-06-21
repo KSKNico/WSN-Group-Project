@@ -27,6 +27,8 @@ USEMODULE += auto_init_gnrc_netif
 # remove this if more than one interface is present
 USEMODULE += gnrc_netif_single
 
+USEMODULE += gnrc_netif_timestamp
+
 # add minimal IPv6 support
 USEMODULE += gnrc_ipv6_default
 
@@ -60,5 +62,7 @@ CFLAGS += -DSENDER
 else ifeq ($(ROLE), receiver)
 CFLAGS += -DRECEIVER
 endif
+
+CFLAGS += -DIP_ADDR=\"$(IP_ADDR)\"
 
 include $(RIOTBASE)/Makefile.include
