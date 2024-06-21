@@ -10,9 +10,8 @@
 char sender_stack[THREAD_STACKSIZE_MAIN];
 char receiver_stack[THREAD_STACKSIZE_MAIN];
 
-
 // this is the IP address of the receiver
-char const *IP_STRING = IP_ADDR;
+char *IP_STRING = IP_ADDR;
 
 int send_cmd(int argc, char **argv) {
     if (argc != 2) {
@@ -45,10 +44,13 @@ SHELL_COMMAND(receive, "Receives all incoming packages and prints them.", receiv
 int main(void)
 {
     #ifdef SENDER
+        printf("Running as sender\n");
         send_cmd(2, (char *[]){"send", IP_STRING});
     #elif defined(RECEIVER)
+        printf("Running as receiver\n");
         receive_cmd(1, (char *[]){"receive"});
     #else
+        printf("Running as shell\n");
         /* buffer to read commands */
         char line_buf[SHELL_DEFAULT_BUFSIZE];
 

@@ -3,6 +3,8 @@
 #include "phydat.h"
 #include <stdio.h>
 #include "board.h"
+#include <inttypes.h>
+#include "fmt.h"
 
 
 int record_value(saul_reg_t* sensor, phydat_t *results) {
@@ -11,7 +13,7 @@ int record_value(saul_reg_t* sensor, phydat_t *results) {
         puts("Error reading a value from the device");
         return 1;      
     }
-    phydat_dump(results, dim); /* print value*/
+  /*  phydat_dump(results, dim);  print value*/
     return 0;
 }
 
@@ -29,7 +31,7 @@ int record_all_values(saul_reg_t* accel_sensor, saul_reg_t *gyro_sensor, measure
         return 1;
     }
     // pkt_number is set to 0 here, it should be set later - outside the function!
-    *values = (measurement_t){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2], 0};
+    *values = (measurement_t){accel.val[0], accel.val[1], accel.val[2], gyro.val[0], gyro.val[1], gyro.val[2], 0, {0, 0}};
     return 0;
 }
 
@@ -49,14 +51,16 @@ bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
     return true;
 }
 
+
+
 void print_measurment(measurement_t const *measurement, int16_t const *rssi, 
-ipv6_addr_t const *addr, uint64_t const *timestamp) {
-        // convert ip addr to string
-        char ip_addr_str[IPV6_ADDR_MAX_STR_LEN];
-        ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);
-        printf("IP: %s, timestamp: %d, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
-        ip_addr_str,
-        *timestamp,
+uint64_t const *timestamp) {
+       /* ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);*/
+        printf("timestamp: ");
+        print_u64_dec(*timestamp);
+        printf(", ID: %d%d, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        measurement->mac[0],
+        measurement->mac[1],
         measurement->pkt_number,
         *rssi,
         measurement->Ax, measurement->Ay, measurement->Az, 

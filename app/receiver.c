@@ -4,26 +4,25 @@
 
 #define MSG_QUEUE_SIZE  8
 
-void receive_pkt(ipv6_addr_t *ip_addr, measurement_t *measurement, int16_t *rssi, uint64_t *timestamp) {
+void receive_pkt(measurement_t *measurement, int16_t *rssi, uint64_t *timestamp) {
     msg_t msg;
     msg_receive(&msg);
-    uint8_t *ip_addr_buffer = ip_addr->u8;
+   /* uint8_t *ip_addr_buffer = ip_addr->u8;*/
     if (msg.type == GNRC_NETAPI_MSG_TYPE_RCV) {
         gnrc_pktsnip_t *pkt = msg.content.ptr;
 
         memcpy(measurement, pkt->data, pkt->size);
         gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)pkt->data;
         *rssi = netif_hdr->rssi;
-
+        
         *timestamp = netif_hdr->timestamp;
 
-        int addr_len = gnrc_netif_hdr_get_srcaddr(pkt, &ip_addr_buffer);
-
+        /*
         if (addr_len != 16) {
             puts("Error: Address length is not 16 bytes.");
             return;
         }
-
+        */
         
         gnrc_pktbuf_release(pkt);
     }
@@ -42,10 +41,9 @@ void* receiver_loop(void* arg) {
     measurement_t measurement;   
     int16_t rssi;
     uint64_t timestamp;
-    ipv6_addr_t ipv6_addr;
     while(1) {
-        receive_pkt(&ipv6_addr, &measurement, &rssi, &timestamp);
-        print_measurment(&measurement, &rssi, &ipv6_addr, &timestamp);
+        receive_pkt(&measurement, &rssi, &timestamp);
+        print_measurment(&measurement, &rssi, &timestamp);
     }
 
     gnrc_netreg_unregister(GNRC_NETTYPE_IPV6, &server);
