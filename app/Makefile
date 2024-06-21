@@ -57,9 +57,12 @@ QUIET ?= 1
 # with ROLE=sender, the sender application is compiled
 # with ROLE=receiver, the receiver application is compiled
 # if nothing is specified, the shell is run
-ifeq ($(ROLE), sender)
+ifeq ($(ROLE), SENDER)
+# do print
+$(info Compiling sender application)
 CFLAGS += -DSENDER
-else ifeq ($(ROLE), receiver)
+else ifeq ($(ROLE), RECEIVER)
+$(info Compiling receiver application)
 CFLAGS += -DRECEIVER
 endif
 
