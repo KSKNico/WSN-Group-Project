@@ -4,18 +4,21 @@
 
 #define MSG_QUEUE_SIZE  8
 
-void receive_pkt(measurement_t *measurement, int16_t *rssi, uint64_t *timestamp) {
+void receive_pkt(measurement_t *measurement, int16_t *rssi) {
     msg_t msg;
     msg_receive(&msg);
    /* uint8_t *ip_addr_buffer = ip_addr->u8;*/
     if (msg.type == GNRC_NETAPI_MSG_TYPE_RCV) {
         gnrc_pktsnip_t *pkt = msg.content.ptr;
 
+        gnrc_pktsnip_t* netif_snip = gnrc_pktsnip_search_type(pkt, GNRC_NETTYPE_NETIF);
+
         memcpy(measurement, pkt->data, pkt->size);
-        gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)pkt->data;
+        gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)netif_snip->data;
         *rssi = netif_hdr->rssi;
         
-        *timestamp = netif_hdr->timestamp;
+        // timestamp does not work!
+        // *timestamp = netif_hdr->timestamp;
 
         /*
         if (addr_len != 16) {
@@ -41,8 +44,10 @@ void* receiver_loop(void* arg) {
     measurement_t measurement;   
     int16_t rssi;
     uint64_t timestamp;
+    
     while(1) {
-        receive_pkt(&measurement, &rssi, &timestamp);
+        timestamp = (uint64_t) ztimer_now(ZTIMER_MSEC);
+        receive_pkt(&measurement, &rssi);
         print_measurment(&measurement, &rssi, &timestamp);
     }
 

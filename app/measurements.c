@@ -58,7 +58,7 @@ uint64_t const *timestamp) {
        /* ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);*/
         printf("timestamp: ");
         print_u64_dec(*timestamp);
-        printf(", ID: %d%d, pkt_number: %d, RSSI: %hd, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        printf(", ID: %d%d, pkt_number: %d, RSSI: %" PRId16 ", Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
         measurement->mac[0],
         measurement->mac[1],
         measurement->pkt_number,
