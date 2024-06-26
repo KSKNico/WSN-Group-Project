@@ -4,7 +4,7 @@
 
 #define MSG_QUEUE_SIZE  8
 
-void receive_pkt(measurement_t *measurement, int16_t *rssi) {
+void receive_pkt(measurement_t *measurement, int16_t *rssi, ipv6_addr_t *addr) {
     msg_t msg;
     msg_receive(&msg);
    /* uint8_t *ip_addr_buffer = ip_addr->u8;*/
@@ -12,9 +12,14 @@ void receive_pkt(measurement_t *measurement, int16_t *rssi) {
         gnrc_pktsnip_t *pkt = msg.content.ptr;
 
         gnrc_pktsnip_t* netif_snip = gnrc_pktsnip_search_type(pkt, GNRC_NETTYPE_NETIF);
+        gnrc_pktsnip_t* ipv6_snip = gnrc_pktsnip_search_type(pkt, GNRC_NETTYPE_IPV6); 
 
         memcpy(measurement, pkt->data, pkt->size);
         gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)netif_snip->data;
+        ipv6_hdr_t *ipv6_hdr = (ipv6_hdr_t *) ipv6_snip->data;
+
+
+        *addr = ipv6_hdr->src;
         *rssi = netif_hdr->rssi;
         
         // timestamp does not work!
@@ -44,11 +49,12 @@ void* receiver_loop(void* arg) {
     measurement_t measurement;   
     int16_t rssi;
     uint64_t timestamp;
+    ipv6_addr_t addr;
     
     while(1) {
         timestamp = (uint64_t) ztimer_now(ZTIMER_MSEC);
-        receive_pkt(&measurement, &rssi);
-        print_measurment(&measurement, &rssi, &timestamp);
+        receive_pkt(&measurement, &rssi, &addr);
+        print_measurment(&measurement, &rssi, &timestamp, &addr);
     }
 
     gnrc_netreg_unregister(GNRC_NETTYPE_IPV6, &server);
