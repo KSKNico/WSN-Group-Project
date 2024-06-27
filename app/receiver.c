@@ -18,8 +18,9 @@ void receive_pkt(measurement_t *measurement, int16_t *rssi, ipv6_addr_t *addr) {
         gnrc_netif_hdr_t *netif_hdr = (gnrc_netif_hdr_t *)netif_snip->data;
         ipv6_hdr_t *ipv6_hdr = (ipv6_hdr_t *) ipv6_snip->data;
 
+        memcpy(addr, &(ipv6_hdr->src), sizeof(ipv6_addr_t));
 
-        *addr = ipv6_hdr->src;
+
         *rssi = netif_hdr->rssi;
         
         // timestamp does not work!
