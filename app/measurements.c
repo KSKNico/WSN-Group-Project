@@ -63,7 +63,7 @@ uint64_t const *timestamp, ipv6_addr_t const *addr) {
         printf(", IP: %s , pkt_number: %d, RSSI: %" PRId16 ", Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
         addr_str,
         measurement->pkt_number,
-        *rssi,
+        (signed) (*rssi),
         measurement->Ax, measurement->Ay, measurement->Az, 
         measurement->Gx, measurement->Gy, measurement->Gz);
 }
