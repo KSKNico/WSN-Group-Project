@@ -52,16 +52,18 @@ int send_packet(ipv6_addr_t *addr, netif_t **netif, measurement_t *measurement) 
 void* sender_loop(void *arg) {
     puts("Starting sender loop.");
 
+    /*
     gnrc_netif_t *netif_ = NULL;
 
+    
     uint8_t mac_addr[2];
     int res;
 
     while ((netif_ = gnrc_netif_iter(netif_))) {
-        /* Get the MAC address of the network interface */
+        Get the MAC address of the network interface
         res = gnrc_netapi_get(netif_->pid, NETOPT_ADDRESS, 0, mac_addr, sizeof(mac_addr));
         assert(res == 2);
-        /*
+        
         if (res > 0) {
             printf("MAC address of interface %d: ", netif_->pid);
             for (int i = 0; i < res; i++) {
@@ -69,8 +71,9 @@ void* sender_loop(void *arg) {
             }
             printf("\n");
         }
-        */
+        
     }
+    */
 
     saul_reg_t *accel, *gyro;
     if (!find_saul(&accel, &gyro)) {
@@ -89,8 +92,6 @@ void* sender_loop(void *arg) {
     while (1) {
         record_all_values(accel, gyro, &result);
         result.pkt_number = pkt_number;
-        result.mac[0] = mac_addr[0];
-        result.mac[1] = mac_addr[1];
         send_packet(&addr, &netif, &result);
         pkt_number = pkt_number + 1;
         xtimer_usleep(DELAY_MS * US_PER_MS);
