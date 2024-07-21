@@ -1,6 +1,6 @@
+# Imports
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 # Load the data
 data = pd.read_csv('output_01.csv')
@@ -19,21 +19,44 @@ data['gy'] = clean_column(data['gy'], 'Gy: ')
 data['gz'] = clean_column(data['gz'], 'Gz: ')
 data['id'] = data['id'].str.replace('ID: ', '').astype(int)
 
-# Select the columns to be normalized and the columns to be left unchanged
-columns_to_normalize = ['ax', 'ay', 'az', 'gx', 'gy', 'gz']
-columns_to_leave = ['id', 'pkt']
+# Sorting the data by id and pkt to ensure correct differences
+data = data.sort_values(by=['id', 'pkt'])
 
-# Normalize only the selected columns
-scaler = StandardScaler()
-data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
+# Calculate the difference between the current row's gx, gy, gz and the previous row's gx, gy, gz
+#data['gx_diff'] = data['gx'] - data['gx'].shift(1)
+#data['gy_diff'] = data['gy'] - data['gy'].shift(1)
+#data['gz_diff'] = data['gz'] - data['gz'].shift(1)
 
-# Select only the columns we are interested in after normalization
-df = data[columns_to_leave + columns_to_normalize]
+# Handling the first row's difference which will be NaN after the shift
+data.loc[data.index[0], 'gx_diff'] = 0
+data.loc[data.index[0], 'gy_diff'] = 0
+data.loc[data.index[0], 'gz_diff'] = 0
 
-# Sorting the data
-df = df.sort_values(by='id')
-df = df.sort_values(by='pkt')
+# Create plots for each unique id
+unique_ids = data['id'].unique()
 
+for unique_id in unique_ids:
+    df_id = data[data['id'] == unique_id]
 
-# Save the resulting DataFrame to a CSV file
-df.to_csv('possibly_decent_111.csv', index=False)
+    # Save file for each unique id as a CSV
+    df_id.to_csv(f'possibly_decent_{unique_id}.csv', index=False)
+    
+    plt.figure(figsize=(12, 8))
+    plt.plot(df_id['pkt'], df_id['ax'], label='ax')
+    plt.plot(df_id['pkt'], df_id['ay'], label='ay')
+    plt.plot(df_id['pkt'], df_id['az'], label='az')
+    plt.plot(df_id['pkt'], df_id['gx'], label='gx')
+    plt.plot(df_id['pkt'], df_id['gy'], label='gy')
+    plt.plot(df_id['pkt'], df_id['gz'], label='gz')
+
+    plt.xlabel('pkt')
+    plt.ylabel('Value')
+    plt.title(f'Sensor Data Over Packets for ID {unique_id}')
+    plt.legend()
+    plt.grid(True)
+
+    # Save the graph as an image
+    plt.savefig(f'sensor_data_plot_id_{unique_id}.png')
+
+    # Show the plot
+    plt.show()
