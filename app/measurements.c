@@ -53,17 +53,18 @@ bool find_saul(saul_reg_t **accel, saul_reg_t **gyro) {
 
 
 
-void print_measurment(measurement_t const *measurement, int16_t const *rssi, 
+void print_measurment(measurement_t const *measurement, int16_t const *rssi, uint8_t const *lqi,
 uint64_t const *timestamp, ipv6_addr_t const *addr) {
        /* ipv6_addr_to_str(ip_addr_str, addr, IPV6_ADDR_MAX_STR_LEN);*/
         char addr_str[IPV6_ADDR_MAX_STR_LEN];
         ipv6_addr_to_str(addr_str, addr, sizeof(addr_str));
         printf("timestamp: ");
         print_u64_dec(*timestamp);
-        printf(", IP: %s , pkt_number: %d, RSSI: %" PRId16 ", Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
+        printf(", IP: %s, pkt_number: %d, RSSI: %" PRId16 ", LQI: %u, Ax: %d, Ay: %d, Az: %d, Gx: %d, Gy: %d, Gz: %d\n",
         addr_str,
         measurement->pkt_number,
-        (signed) (*rssi),
+        *rssi,
+        *lqi,
         measurement->Ax, measurement->Ay, measurement->Az, 
         measurement->Gx, measurement->Gy, measurement->Gz);
 }
